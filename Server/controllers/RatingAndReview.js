@@ -1,4 +1,4 @@
-const RatingAndReview = require("../models/RatingAndReviews");
+const RatingAndReview = require("../models/RatingAndReview");
 const Course = require("../models/Course");
 const { mongo, default: mongoose } = require("mongoose");
 
@@ -118,29 +118,36 @@ exports.getAverageRating = async (req, res) => {
 //getAllRatingAndReviews
 
 exports.getAllRating = async (req, res) => {
-    try{
-            const allReviews = await RatingAndReview.find({})
-                                    .sort({rating: "desc"})
-                                    .populate({
-                                        path:"user",
-                                        select:"firstName lastName email image",
-                                    })
-                                    .populate({
-                                        path:"course",
-                                        select: "courseName",
-                                    })
-                                    .exec();
-            return res.status(200).json({
-                success:true,
-                message:"All reviews fetched successfully",
-                data:allReviews,
-            });
-    }   
-    catch(error) {
-        console.log(error);
+    try {
+        console.log("Fetching all ratings...");  // Debug log
+
+        const allReviews = await RatingAndReview.find({})
+            .sort({ rating: "desc" })
+            .populate({
+                path: "user",
+                model: "user", // Ensure this matches the User model name
+                select: "firstName lastName email image",
+            })
+            .populate({
+                path: "course",
+                model: "Course", // Ensure this matches the Course model name
+                select: "courseName",
+            })
+            .exec();
+
+        console.log("Reviews fetched:", allReviews.length);  // Debug log
+
+        return res.status(200).json({
+            success: true,
+            message: "All reviews fetched successfully",
+            data: allReviews,
+        });
+    } catch (error) {
+        console.error("Error fetching reviews:", error);  // Log detailed error
         return res.status(500).json({
-            success:false,
-            message:error.message,
-        })
-    } 
-}
+            success: false,
+            message: "Internal Server Error",
+            error: error.message,
+        });
+    }
+};

@@ -4,88 +4,87 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
 exports.resetPasswordToken = async (req, res) => {
-    try {
-        const { email } = req.body;
-        const user = await User.findOne({ email });
+	try {
+		const email = req.body.email;
+		const user = await User.findOne({ email: email });
+		if (!user) {
+			return res.json({
+				success: false,
+				message: `This Email: ${email} is not Registered With Us Enter a Valid Email `,
+			});
+		}
+		const token = crypto.randomBytes(20).toString("hex");
 
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: `This Email: ${email} is not registered with us. Enter a valid email.`,
-            });
-        }
+		const updatedDetails = await User.findOneAndUpdate(
+			{ email: email },
+			{
+				token: token,
+				resetPasswordExpires: Date.now() + 3600000,
+			},
+			{ new: true }
+		);
+		console.log("DETAILS", updatedDetails);
 
-        const token = crypto.randomBytes(20).toString("hex");
-        user.token = token;
-        user.resetPasswordExpires = Date.now() + 3600000; // Token valid for 1 hour
-        await user.save();
+		const url = `http://localhost:3000/update-password/${token}`;
 
-        console.log("Generated Token: ", token);
-        console.log("Updated User Details: ", user);
+		await mailSender(
+			email,
+			"Password Reset",
+			`Your Link for email verification is ${url}. Please click this url to reset your password.`
+		);
 
-        const url = `http://localhost:3000/update-password/${token}`;
-        await mailSender(
-            email,
-            "Password Reset",
-            `Your link for password reset is ${url}. Please click this link to reset your password.`
-        );
-
-        return res.json({
-            success: true,
-            message: "Email sent successfully. Please check your email to continue.",
-        });
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: "An error occurred while sending the reset email.",
-            error: error.message,
-        });
-    }
+		res.json({
+			success: true,
+			message:
+				"Email Sent Successfully, Please Check Your Email to Continue Further",
+		});
+	} catch (error) {
+		return res.json({
+			error: error.message,
+			success: false,
+			message: `Some Error in Sending the Reset Message`,
+		});
+	}
 };
 
 exports.resetPassword = async (req, res) => {
-    try {
-        const { password, confirmPassword, token } = req.body;
+	try {
+		const { password, confirmPassword, token } = req.body;
 
-        if (password !== confirmPassword) {
-            return res.status(400).json({
-                success: false,
-                message: "Password and Confirm Password do not match.",
-            });
-        }
-
-        const user = await User.findOne({ token });
-        console.log("User Details Found for Token: ", user);
-
-        if (!user) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid or expired token.",
-            });
-        }
-
-        if (user.resetPasswordExpires < Date.now()) {
-            return res.status(403).json({
-                success: false,
-                message: "Token has expired. Please generate a new one.",
-            });
-        }
-
-        const encryptedPassword = await bcrypt.hash(password, 10);
-        user.password = encryptedPassword;
-        user.token = undefined; // Clear token after successful reset
-        user.resetPasswordExpires = undefined;
-        await user.save();
-
-        return res.json({
-            success: true,
-            message: "Password reset successful. You can now log in with your new password.",
-        });
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: "An error occurred while updating the password.",
-            error: error.message,
-        });
-    }
+		if (confirmPassword !== password) {
+			return res.json({
+				success: false,
+				message: "Password and Confirm Password Does not Match",
+			});
+		}
+		const userDetails = await User.findOne({ token: token });
+		if (!userDetails) {
+			return res.json({
+				success: false,
+				message: "Token is Invalid",
+			});
+		}
+		if (!(userDetails.resetPasswordExpires > Date.now())) {
+			return res.status(403).json({
+				success: false,
+				message: `Token is Expired, Please Regenerate Your Token`,
+			});
+		}
+		const encryptedPassword = await bcrypt.hash(password, 10);
+		await User.findOneAndUpdate(
+			{ token: token },
+			{ password: encryptedPassword },
+			{ new: true }
+		);
+		res.json({
+			success: true,
+			message: `Password Reset Successful`,
+		});
+	} catch (error) {
+		return res.json({
+			error: error.message,
+			success: false,
+			message: `Some Error in Updating the Password`,
+		});
+	}
 };
