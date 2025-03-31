@@ -10,7 +10,7 @@ require("dotenv").config();
 
 // Signup Controller for Registering USers
 
-exports.signUp = async (req, res) => {
+exports.signup = async (req, res) => {
 	try {
 		// Destructure fields from the request body
 		const {
@@ -179,7 +179,7 @@ exports.login = async (req, res) => {
 	}
 };
 // Send OTP For Email Verification
-exports.sendOTP = async (req, res) => {
+exports.sendotp = async (req, res) => {
 	try {
 		const { email } = req.body;
 

@@ -30,7 +30,10 @@ const Footer = () => {
           {/* Section 1 */}
           <div className="lg:w-[50%] flex flex-wrap flex-row justify-between lg:border-r lg:border-richblack-700 pl-3 lg:pr-5 gap-3">
             <div className="w-[30%] flex flex-col gap-3 lg:w-[30%] mb-7 lg:pl-0">
-              <img src={Logo} alt="" className="object-contain" />
+              {/* <img src={Logo} alt="" className="object-contain" /> */}
+              <h1 className="text-3xl font-extrabold text-white bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-lg shadow-lg tracking-wide uppercase">
+                LMS
+              </h1>
               <h1 className="text-richblack-50 font-semibold text-[16px]">
                 Company
               </h1>
@@ -158,11 +161,10 @@ const Footer = () => {
               return (
                 <div
                   key={i}
-                  className={` ${
-                    BottomFooter.length - 1 === i
-                      ? ""
-                      : "border-r border-richblack-700 cursor-pointer hover:text-richblack-50 transition-all duration-200"
-                  } px-3 `}
+                  className={` ${BottomFooter.length - 1 === i
+                    ? ""
+                    : "border-r border-richblack-700 cursor-pointer hover:text-richblack-50 transition-all duration-200"
+                    } px-3 `}
                 >
                   <Link to={ele.split(" ").join("-").toLocaleLowerCase()}>
                     {ele}
@@ -172,7 +174,7 @@ const Footer = () => {
             })}
           </div>
 
-          <div className="text-center">Made with ❤️ The tech guys © 2024 Studynotion</div>
+          <div className="text-center">Made with ❤️ Team LMS © 2024</div>
         </div>
       </div>
     </div>
