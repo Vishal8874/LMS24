@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom"
 import useOnClickOutside from "../../../hooks/useOnClickOutside"
 import { logout } from "../../../services/operations/authAPI"
 
-export default function ProfileDropdown() {
+export default function ProfileDropdown({ isMobile = false, isMenuOpen = false , closeMenu = () => {}}) {
   const { user } = useSelector((state) => state.profile)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -18,6 +18,40 @@ export default function ProfileDropdown() {
 
   if (!user) return null
 
+  // Mobile menu view
+  if (isMobile && isMenuOpen) {
+    return (
+      <div className="flex flex-col gap-y-2">
+          <Link to="/dashboard/my-profile" onClick={closeMenu}>
+        <div className="flex items-center gap-x-2">
+          <img
+            src={user?.image}
+            alt={`profile-${user?.firstName}`}
+            className="w-[30px] h-[30px] rounded-full object-cover"
+          />
+          <span className="text-richblack-100 font-medium">{user?.firstName}</span>
+        </div>
+          </Link>
+        <Link to="/dashboard/my-profile" onClick={closeMenu}>
+          <div className="flex items-center gap-x-2 text-richblack-100 py-2">
+            <VscDashboard className="text-lg" />
+            Dashboard
+          </div>
+        </Link>
+        <button
+          onClick={() => {dispatch(logout(navigate)
+          )
+        closeMenu()}}
+          className="flex items-center gap-x-2 text-richblack-100 py-2"
+        >
+          <VscSignOut className="text-lg" />
+          Logout
+        </button>
+      </div>
+    )
+  }
+
+  // Desktop dropdown
   return (
     <button className="relative" onClick={() => setOpen(true)}>
       <div className="flex items-center gap-x-1">

@@ -16,7 +16,7 @@ export const getCatalogaPageData = async (categoryId) => {
   let result = [];
 
   try {
-    const response = await apiConnector("POST", catalogData.CATALOGPAGEDATA_API, { categoryId });
+    const response = await apiConnector("POST", catalogData.CATALOG_PAGE_DATA_API, { categoryId });
 
     // console.log("CATALOG PAGE DATA API RESPONSE:", response);
 

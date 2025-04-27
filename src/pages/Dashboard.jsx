@@ -16,7 +16,7 @@ const Dashboard = () => {
   return (
     <div className="relative flex h-screen">
       {/* Sidebar (Full Height) */}
-      <div className="w-[250px] h-screen bg-richblack-900 shadow-lg">
+      <div className="w-[250px] h-screen bg-richblack-900 shadow-lg hidden md:block">
         <Sidebar />
       </div>
 

@@ -5,8 +5,10 @@ import { apiConnector } from "../apiconnector"
 import { profileEndpoints } from "../apis"
 import { logout } from "./authAPI"
 
-const { GET_USER_DETAILS_API, GET_USER_ENROLLED_COURSES_API,
-  GET_INSTRUCTOR_DATA_API
+const { GET_USER_DETAILS_API,
+   GET_USER_ENROLLED_COURSES_API,
+  GET_INSTRUCTOR_DATA_API,
+  GET_ALL_STUDENTS_API,
  } = profileEndpoints
 
 export function getUserDetails(token, navigate) {
@@ -83,4 +85,26 @@ export async function getInstructorData
   }
   toast.dismiss(toastId)
   return result
+}
+
+//get all users
+export async function getAllStudents(token) {
+  const toastId = toast.loading("Loading students...");
+  let result = [];
+
+  try {
+    const response = await apiConnector("GET", GET_ALL_STUDENTS_API, null, {
+      Authorization: `Bearer ${token}`,
+    });
+
+    console.log("GET_ALL_STUDENTS_API RESPONSE >>>>", response);
+
+    result = response?.data?.data; // Adjust based on your backend's response structure
+  } catch (error) {
+    console.error("GET_ALL_STUDENTS_API ERROR >>>>", error);
+    toast.error("Could not fetch students");
+  }
+
+  toast.dismiss(toastId);
+  return result;
 }

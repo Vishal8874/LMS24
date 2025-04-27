@@ -3,7 +3,7 @@ import RatingStars from '../../common/RatingStars'
 import GetAvgRating from '../../../utils/avgRating';
 import { Link } from 'react-router-dom';
 
-const Course_Card = ({course, Height}) => {
+const CourseCard = ({course, Height, Width}) => {
 
 
     const [avgReviewCount, setAvgReviewCount] = useState(0);
@@ -23,7 +23,7 @@ const Course_Card = ({course, Height}) => {
             <img
               src={course?.thumbnail}
               alt="course thumnail"
-              className={`${Height} w-full rounded-xl object-cover `}
+              className={`${Height} ${Width} w-full rounded-xl object-cover `}
             />
           </div>
           <div className="flex flex-col gap-2 px-1 py-3">
@@ -46,4 +46,4 @@ const Course_Card = ({course, Height}) => {
   )
 }
 
-export default Course_Card
+export default CourseCard

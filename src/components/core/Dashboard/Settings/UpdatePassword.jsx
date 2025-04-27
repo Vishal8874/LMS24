@@ -21,11 +21,19 @@ export default function UpdatePassword() {
   } = useForm()
 
   const submitPasswordForm = async (data) => {
-    // console.log("password Data - ", data)
+    // console.log("Password Data being sent:", data)
+
     try {
-      await changePassword(token, data)
+      const formData = {
+        oldPassword: data.oldPassword,
+        newPassword: data.newPassword,
+        confirmNewPassword: data.newPassword, // Auto-assign newPassword to confirmNewPassword
+      }
+
+      await changePassword(token, formData)
+      navigate("/dashboard/my-profile")
     } catch (error) {
-      console.log("ERROR MESSAGE - ", error.message)
+      // console.log("ERROR MESSAGE - ", error.message)
     }
   }
 

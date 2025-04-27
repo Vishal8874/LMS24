@@ -22,9 +22,10 @@ export default function EditProfile() {
   const submitProfileForm = async (data) => {
     // console.log("Form Data - ", data)
     try {
-      dispatch(updateProfile(token, data))
+      await dispatch(updateProfile(token, data));
+      navigate("/dashboard/my-profile");
     } catch (error) {
-      console.log("ERROR MESSAGE - ", error.message)
+      // console.log("ERROR MESSAGE - ", error.message)
     }
   }
   return (
