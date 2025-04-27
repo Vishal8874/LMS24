@@ -75,6 +75,7 @@ export default function PublishCourse() {
             <input
               type="checkbox"
               id="public"
+              defaultChecked
               {...register("public")}
               className="border-gray-300 h-4 w-4 rounded bg-richblack-500 text-richblack-400 focus:ring-2 focus:ring-richblack-5"
             />

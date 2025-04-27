@@ -13,6 +13,8 @@ export const endpoints = {
 export const profileEndpoints = {
   GET_USER_DETAILS_API: BASE_URL + "/profile/getUserDetails",
   GET_USER_ENROLLED_COURSES_API: BASE_URL + "/profile/getEnrolledCourses",
+  GET_INSTRUCTOR_DATA_API: BASE_URL + "/profile/instructorDashboard",
+  GET_ALL_STUDENTS_API : BASE_URL + "/profile/getAllStudents",
 }
 
 // STUDENTS ENDPOINTS
@@ -51,11 +53,13 @@ export const ratingsEndpoints = {
 // CATAGORIES API
 export const categories = {
   CATEGORIES_API: BASE_URL + "/course/showAllCategories",
+  CREATE_CATEGORIES_API: BASE_URL + "/course/createCategory",
+  DELETE_CATEGORIES_API: BASE_URL + "/course/deleteCategory",
 }
 
 // CATALOG PAGE DATA
 export const catalogData = {
-  CATALOGPAGEDATA_API: BASE_URL + "/course/getCategoryPageDetails",
+  CATALOG_PAGE_DATA_API: BASE_URL + "/course/getCategoryPageDetails",
 }
 // CONTACT-US API
 export const contactusEndpoint = {

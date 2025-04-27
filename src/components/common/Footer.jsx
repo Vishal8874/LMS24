@@ -32,7 +32,7 @@ const Footer = () => {
             <div className="w-[30%] flex flex-col gap-3 lg:w-[30%] mb-7 lg:pl-0">
               {/* <img src={Logo} alt="" className="object-contain" /> */}
               <h1 className="text-3xl font-extrabold text-white bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-lg shadow-lg tracking-wide uppercase">
-                LMS
+                LMS24
               </h1>
               <h1 className="text-richblack-50 font-semibold text-[16px]">
                 Company

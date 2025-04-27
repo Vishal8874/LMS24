@@ -1,9 +1,9 @@
 import { toast } from "react-hot-toast"
 
-import { updateCompletedLectures } from "../../slices/viewCourseSlice"
+// import { updateCompletedLectures } from "../../slices/viewCourseSlice"
 // import { setLoading } from "../../slices/profileSlice";
 import { apiConnector } from "../apiconnector"
-import { courseEndpoints } from "../apis"
+import { courseEndpoints, categories } from "../apis"
 
 const {
   COURSE_DETAILS_API,
@@ -23,6 +23,10 @@ const {
   CREATE_RATING_API,
   LECTURE_COMPLETION_API,
 } = courseEndpoints
+
+const {CREATE_CATEGORIES_API,
+  DELETE_CATEGORIES_API,
+} = categories
 
 export const getAllCourses = async () => {
   const toastId = toast.loading("Loading...")
@@ -81,6 +85,57 @@ export const fetchCourseCategories = async () => {
   }
   return result
 }
+
+//add the course categories
+export const createCategory = async (form, token) => {
+  const toastId = toast.loading("Creating category...");
+
+  try {
+    const response = await apiConnector(
+      "POST",
+      CREATE_CATEGORIES_API,
+      form,
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    if (!response?.data?.success) {
+      throw new Error(response.data.message || "Category creation failed");
+    }
+
+    toast.success("Category created successfully", { id: toastId });
+    return response.data;
+  } catch (error) {
+    console.log("CREATE_CATEGORY_API ERROR:", error);
+    toast.error(error?.response?.data?.message || "Category creation failed", {
+      id: toastId,
+    });
+    return null;
+  }
+};
+
+//delete the category
+export const deleteCategory = async (categoryId, token) => {
+  const toastId = toast.loading("Deleting category...");
+  try {
+    const response = await apiConnector(
+      "DELETE",
+      `${DELETE_CATEGORIES_API}/${categoryId}`,
+      null,
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+    toast.success("Category deleted", { id: toastId });
+    return response.data;
+  } catch (error) {
+    console.log("DELETE_CATEGORY_API ERROR:", error);
+    toast.error("Failed to delete category", { id: toastId });
+    return null;
+  }
+};
+
 
 // add the course details
 export const addCourseDetails = async (data, token) => {
@@ -286,23 +341,32 @@ export const fetchInstructorCourses = async (token) => {
 }
 
 // delete a course
-export const deleteCourse = async (data, token) => {
-  const toastId = toast.loading("Loading...")
+export const deleteCourse = async (courseId, token) => {
+  const toastId = toast.loading("Loading...");
   try {
-    const response = await apiConnector("DELETE", DELETE_COURSE_API, data, {
-      Authorization: `Bearer ${token}`,
-    })
-    console.log("DELETE COURSE API RESPONSE............", response)
+    const response = await apiConnector(
+      "DELETE",
+      `${DELETE_COURSE_API}/${courseId}`, 
+      null, 
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+    console.log("DELETE COURSE API RESPONSE:", response);
+
     if (!response?.data?.success) {
-      throw new Error("Could Not Delete Course")
+      throw new Error("Could Not Delete Course");
     }
-    toast.success("Course Deleted")
+
+    toast.success("Course Deleted");
   } catch (error) {
-    console.log("DELETE COURSE API ERROR............", error)
-    toast.error(error.message)
+    console.log("DELETE COURSE API ERROR:", error);
+    toast.error(error.message);
   }
-  toast.dismiss(toastId)
-}
+  toast.dismiss(toastId);
+};
+
+
 
 // get full details of a course
 export const getFullDetailsOfCourse = async (courseId, token) => {
@@ -387,3 +451,4 @@ export const createRating = async (data, token) => {
   toast.dismiss(toastId)
   return success
 }
+

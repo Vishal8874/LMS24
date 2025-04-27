@@ -42,7 +42,7 @@ const ExploreMore = () => {
       </div>
 
       {/* Tabs Section */}
-      <div className="flex flex-row gap-10 rounded-full bg-richblack-800 mb-5 mt-5 border-richblack-100 px-1 py-1">
+      <div className="flex flex-row gap-10 rounded-full bg-richblack-800 mb-5 mt-5 border-richblack-100 px-3 py-2">
         {tabsName.map((ele, index) => (
           <div
             key={index}

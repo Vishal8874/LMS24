@@ -12,6 +12,7 @@ const {
   getFullCourseDetails,
   editCourse,
   getInstructorCourses,
+  getInstructorCoursesByAdmin,
   deleteCourse,
 } = require("../controllers/Course")
 
@@ -21,6 +22,7 @@ const {
   showAllCategories,
   createCategory,
   categoryPageDetails,
+  deleteCategory,
 } = require("../controllers/Category")
 
 // Sections Controllers Import
@@ -79,6 +81,7 @@ router.post("/getFullCourseDetails", auth, getFullCourseDetails)
 router.post("/editCourse", auth, isInstructor, editCourse)
 // Get all Courses Under a Specific Instructor
 router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
+
 // Delete a Course
 router.delete("/deleteCourse", deleteCourse)
 
@@ -92,6 +95,9 @@ router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 router.post("/createCategory", auth, isAdmin, createCategory)
 router.get("/showAllCategories", showAllCategories)
 router.post("/getCategoryPageDetails", categoryPageDetails)
+
+router.delete("/deleteCategory/:categoryId", auth, isAdmin, deleteCategory);
+
 
 // ********************************************************************************************************
 //                                      Rating and Review

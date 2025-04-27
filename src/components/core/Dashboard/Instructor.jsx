@@ -18,13 +18,14 @@ export default function Instructor() {
       setLoading(true);
       try {
         const instructorApiData = await getInstructorData(token);
+        // console.log("intructor api dATA",instructorApiData);
         const result = await fetchInstructorCourses(token);
 
         // Ensure data is set correctly
         setInstructorData(instructorApiData || []);
         setCourses(result || []);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }

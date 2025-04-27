@@ -140,6 +140,7 @@ export default function NestedView({ handleChangeEditSectionName }) {
                 </div>
               ))}
               {/* Add New Lecture to Section */}
+              <div className="flex items-center justify-between">
               <button
                 onClick={() => setAddSubsection(section._id)}
                 className="mt-3 flex items-center gap-x-1 text-yellow-50"
@@ -147,6 +148,14 @@ export default function NestedView({ handleChangeEditSectionName }) {
                 <FaPlus className="text-lg" />
                 <p>Add Lecture</p>
               </button>
+              <button
+                onClick={() => setAddSubsection(section._id)}
+                className="mt-3 flex items-center gap-x-1 text-yellow-50"
+              >
+                <FaPlus className="text-lg" />
+                <p>Add Notes</p>
+              </button>
+              </div>
             </div>
           </details>
         ))}

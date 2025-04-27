@@ -34,6 +34,10 @@ import VerifyEmail from "./pages/VerifyEmail"
 import ViewCourse from "./pages/ViewCourse"
 import { getUserDetails } from "./services/operations/profileAPI"
 import { ACCOUNT_TYPE } from "./utils/constants"
+import CategoriesManagement from "./components/core/Dashboard/Admin/CategoriesManagement"
+import StudentsMangement from "./components/core/Dashboard/Admin/StudentsManagement"
+import InstructorManagement from "./components/core/Dashboard/Admin/InstructorManagement"
+import CourseManagement from "./components/core/Dashboard/Admin/CourseManagement"
 
 function App() {
   const dispatch = useDispatch()
@@ -131,6 +135,15 @@ function App() {
               <Route path="/dashboard/cart" element={<Cart />} />
             </>
           )}
+          {/* Route only for Admin */}
+          {user?.accountType === ACCOUNT_TYPE.ADMIN && (
+            <>
+              <Route path="dashboard/admin/users" element={<StudentsMangement/>}/>
+              <Route path="dashboard/admin/instructors" element={<InstructorManagement/>}/>
+              <Route path="dashboard/admin/courses" element={<CourseManagement/>}/>
+              <Route path="dashboard/admin/categories" element={<CategoriesManagement />} />
+            </>
+          )}
           <Route path="dashboard/settings" element={<Settings />} />
         </Route>
 
@@ -151,6 +164,8 @@ function App() {
             </>
           )}
         </Route>
+
+        
 
         {/* 404 Page */}
         <Route path="*" element={<Error />} />

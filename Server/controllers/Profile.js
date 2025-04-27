@@ -7,20 +7,40 @@ const { convertSecondsToDuration } = require("../utils/secToDuration");
 // Method for updating a profile
 exports.updateProfile = async (req, res) => {
 	try {
-		const { dateOfBirth = "", about = "", contactNumber, gender = "Male" } = req.body; // Default gender to "Male"
+		const { 
+			firstName, 
+			lastName, 
+			dateOfBirth = "", 
+			about = "", 
+			contactNumber, 
+			gender = "Male" 
+		} = req.body; // Default gender to "Male"
+
 		const id = req.user.id;
 
 		// Find the user and profile
 		const userDetails = await User.findById(id).populate("additionalDetails");
-		const profile = await Profile.findById(userDetails.additionalDetails);
+		if (!userDetails) {
+			return res.status(404).json({ success: false, message: "User not found" });
+		}
 
-		// Update the profile fields
+		const profile = await Profile.findById(userDetails.additionalDetails);
+		if (!profile) {
+			return res.status(404).json({ success: false, message: "Profile not found" });
+		}
+
+		// ✅ Update User's firstName & lastName
+		if (firstName) userDetails.firstName = firstName;
+		if (lastName) userDetails.lastName = lastName;
+
+		// ✅ Update Profile details
 		profile.dateOfBirth = dateOfBirth;
 		profile.about = about;
 		profile.contactNumber = contactNumber;
-		profile.gender = gender; // ✅ Update gender (default "Male" if not provided)
+		profile.gender = gender;
 
-		// Save the updated profile
+		// Save the updated user and profile
+		await userDetails.save();
 		await profile.save();
 
 		// Fetch updated user details
@@ -50,7 +70,7 @@ exports.deleteAccount = async (req, res) => {
 		// 	console.log("The answer to life, the universe, and everything!");
 		// });
 		// console.log(job);
-		console.log("Printing ID: ", req.user.id);
+		// console.log("Printing ID: ", req.user.id);
 		const id = req.user.id;
 		
 		const user = await User.findById({ _id: id });
@@ -70,7 +90,7 @@ exports.deleteAccount = async (req, res) => {
 			message: "User deleted successfully",
 		});
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 		res
 			.status(500)
 			.json({ success: false, message: "User Cannot be deleted successfully" });
@@ -83,7 +103,7 @@ exports.getAllUserDetails = async (req, res) => {
 		const userDetails = await User.findById(id)
 			.populate("additionalDetails")
 			.exec();
-		console.log(userDetails);
+		// console.log(userDetails);
 		res.status(200).json({
 			success: true,
 			message: "User Data fetched successfully",
@@ -107,7 +127,7 @@ exports.updateDisplayPicture = async (req, res) => {
         1000,
         1000
       )
-      console.log(image)
+      // console.log(image)
       const updatedProfile = await User.findByIdAndUpdate(
         { _id: userId },
         { image: image.secure_url },
@@ -219,4 +239,27 @@ exports.instructorDashboard = async(req, res) => {
 		console.error(error);
 		res.status(500).json({message:"Internal Server Error"});
 	}
+}
+
+
+//get all students
+
+exports.getAllStudents = async (req, res) => {
+  try {
+    const students = await User.find({ accountType: 'Student' })
+      .populate("courses", "courseName") 
+      .populate("additionalDetails", "phoneNumber about") 
+      .exec()
+
+    res.status(200).json({
+      success: true,
+      data: students,
+    })
+  } catch (error) {
+    console.error("Error fetching students:", error)
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    })
+  }
 }

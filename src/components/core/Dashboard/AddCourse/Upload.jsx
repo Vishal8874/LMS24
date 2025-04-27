@@ -36,7 +36,6 @@ export default function Upload({
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file) {
-      // ✅ Manual validation for file type
       const isValidType = video
         ? file.type.startsWith("video/")
         : file.type.startsWith("image/");
@@ -60,12 +59,12 @@ export default function Upload({
   // Register input with React Hook Form
   useEffect(() => {
     register(name, { required: true });
-  }, [register]);
+  }, [register, name]);
 
   // Update form value when file changes
   useEffect(() => {
     setValue(name, selectedFile);
-  }, [selectedFile, setValue]);
+  }, [selectedFile, setValue, name]);
 
   return (
     <div className="flex flex-col space-y-2">
@@ -78,7 +77,7 @@ export default function Upload({
         className={`${
           isDragActive ? "bg-richblack-600" : "bg-richblack-700"
         } flex min-h-[250px] cursor-pointer items-center justify-center rounded-md border-2 border-dotted border-richblack-500`}
-        onClick={open} // ✅ Ensures file picker opens when clicked
+        onClick={open}
       >
         {previewSource ? (
           <div className="flex w-full flex-col p-6">
@@ -107,7 +106,6 @@ export default function Upload({
           </div>
         ) : (
           <div className="flex w-full flex-col items-center p-6" {...getRootProps()}>
-            {/* ✅ Ensuring `accept` is applied */}
             <input {...getInputProps({ accept: video ? "video/*" : "image/*" })} />
             <div className="grid aspect-square w-14 place-items-center rounded-full bg-pure-greys-800">
               <FiUploadCloud className="text-2xl text-yellow-50" />

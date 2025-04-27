@@ -48,7 +48,7 @@ exports.createRating = async (req, res) => {
                                         }
                                     },
                                     {new: true});
-        console.log(updatedCourseDetails);
+        // console.log(updatedCourseDetails);
         //return response
         return res.status(200).json({
             success:true,
@@ -57,7 +57,7 @@ exports.createRating = async (req, res) => {
         })
     }
     catch(error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success:false,
             message:error.message,
@@ -106,7 +106,7 @@ exports.getAverageRating = async (req, res) => {
             })
     }
     catch(error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({
             success:false,
             message:error.message,
@@ -119,7 +119,7 @@ exports.getAverageRating = async (req, res) => {
 
 exports.getAllRating = async (req, res) => {
     try {
-        console.log("Fetching all ratings...");  // Debug log
+        // console.log("Fetching all ratings...");  // Debug log
 
         const allReviews = await RatingAndReview.find({})
             .sort({ rating: "desc" })
@@ -135,7 +135,7 @@ exports.getAllRating = async (req, res) => {
             })
             .exec();
 
-        console.log("Reviews fetched:", allReviews.length);  // Debug log
+        // console.log("Reviews fetched:", allReviews.length);  // Debug log
 
         return res.status(200).json({
             success: true,
