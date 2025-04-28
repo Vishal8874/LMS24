@@ -473,30 +473,34 @@ exports.getInstructorCourses = async (req, res) => {
 // Delete the Course
 exports.deleteCourse = async (req, res) => {
   try {
-    const { courseId } = req.body; // ✅ Fetch courseId from params instead of body
+    const { courseId } = req.params;
+    console.log("Deleting Course ID (Backend):", courseId);
 
     if (!courseId) {
       return res.status(400).json({ success: false, message: "Course ID is required" });
     }
 
-    // Find the course
     const course = await Course.findById(courseId);
     if (!course) {
+      console.log("Course not found!");
       return res.status(404).json({ success: false, message: "Course not found" });
     }
 
-    // Unenroll students from the course
-    const studentsEnrolled = course.studentsEnroled;
-    for (const studentId of studentsEnrolled) {
-      await User.findByIdAndUpdate(studentId, {
-        $pull: { courses: courseId },
-      });
+    // Check if studentsEnrolled is an array before iterating
+    const studentsEnrolled = course.studentsEnroled || [];
+    if (Array.isArray(studentsEnrolled)) {
+      for (const studentId of studentsEnrolled) {
+        await User.findByIdAndUpdate(studentId, {
+          $pull: { courses: courseId },
+        });
+      }
+    } else {
+      console.log("studentsEnrolled is not an array or is empty");
     }
 
     // Delete sections and sub-sections
     const courseSections = course.courseContent;
     for (const sectionId of courseSections) {
-      // Delete sub-sections of the section
       const section = await Section.findById(sectionId);
       if (section) {
         for (const subSectionId of section.subSection) {
@@ -511,12 +515,13 @@ exports.deleteCourse = async (req, res) => {
     // Delete the course
     await Course.findByIdAndDelete(courseId);
 
+    console.log("Course deleted successfully!");
     return res.status(200).json({
       success: true,
       message: "Course deleted successfully",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error in deleting course:", error);
     return res.status(500).json({
       success: false,
       message: "Server error",
@@ -524,3 +529,5 @@ exports.deleteCourse = async (req, res) => {
     });
   }
 };
+
+
