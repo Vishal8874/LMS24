@@ -28,7 +28,7 @@ export default function CoursesTable({ courses, setCourses }) {
 
   const handleCourseDelete = async (courseId) => {
     setLoading(true)
-    await deleteCourse({ courseId: courseId }, token)
+    await deleteCourse(courseId, token)  // Directly pass the courseId
     const result = await fetchInstructorCourses(token)
     if (result) {
       setCourses(result)
@@ -36,7 +36,7 @@ export default function CoursesTable({ courses, setCourses }) {
     setConfirmationModal(null)
     setLoading(false)
   }
-
+  
   // console.log("All Course ", courses)
 
   return (

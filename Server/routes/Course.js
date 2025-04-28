@@ -83,7 +83,7 @@ router.post("/editCourse", auth, isInstructor, editCourse)
 router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
 
 // Delete a Course
-router.delete("/deleteCourse", deleteCourse)
+router.delete("/deleteCourse/:courseId", deleteCourse);
 
 router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 

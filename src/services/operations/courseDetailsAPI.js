@@ -343,6 +343,10 @@ export const fetchInstructorCourses = async (token) => {
 // delete a course
 export const deleteCourse = async (courseId, token) => {
   const toastId = toast.loading("Loading...");
+  
+  // Log the courseId to check if it is passed correctly
+  console.log("Deleting Course ID:", courseId); 
+
   try {
     const response = await apiConnector(
       "DELETE",
@@ -365,6 +369,7 @@ export const deleteCourse = async (courseId, token) => {
   }
   toast.dismiss(toastId);
 };
+
 
 
 

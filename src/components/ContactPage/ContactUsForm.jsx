@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "react-hot-toast";
 
 import CountryCode from "../../data/countrycode.json"
 import { apiConnector } from "../../services/apiconnector"
@@ -15,21 +16,27 @@ const ContactUsForm = () => {
   } = useForm()
 
   const submitContactForm = async (data) => {
-    // console.log("Form Data - ", data)
     try {
-      setLoading(true)
+      setLoading(true);
+  
+      // Making API call to submit the contact form
       const res = await apiConnector(
         "POST",
         contactusEndpoint.CONTACT_US_API,
         data
-      )
-      // console.log("Email Res - ", res)
-      setLoading(false)
+      );
+      
+      // On success, show a success toast message
+      toast.success("Your message has been sent successfully!");
+  
+      setLoading(false);
     } catch (error) {
-      // console.log("ERROR MESSAGE - ", error.message)
-      setLoading(false)
+      // On error, show an error toast message
+      toast.error("Something went wrong. Please try again later.");
+      
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     if (isSubmitSuccessful) {
